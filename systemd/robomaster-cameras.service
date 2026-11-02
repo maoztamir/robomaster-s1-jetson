@@ -1,0 +1,21 @@
+[Unit]
+Description=RoboMaster calibrated stereo cameras
+Wants=network-online.target
+After=network-online.target nvargus-daemon.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/robomaster-s1-jetson
+Environment=ROS_DOMAIN_ID=42
+Environment=ROS_LOCALHOST_ONLY=0
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+ExecStart=/bin/bash -c 'source /opt/ros/humble/setup.bash && exec ros2 launch /home/ubuntu/robomaster-s1-jetson/config/stereo_camera.launch.xml'
+Restart=always
+RestartSec=5
+KillSignal=SIGINT
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

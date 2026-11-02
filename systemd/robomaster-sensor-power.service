@@ -1,0 +1,20 @@
+[Unit]
+Description=RoboMaster parked sensor sleep and LiDAR wake guard
+After=network-online.target robomaster-chassis.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/robomaster-s1-jetson
+Environment=ROS_DOMAIN_ID=42
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+Environment=FASTRTPS_DEFAULT_PROFILES_FILE=/home/ubuntu/robomaster-s1-jetson/config/calibration_dds.local.xml
+ExecStart=/bin/bash -c "source /opt/ros/humble/setup.bash && source /home/ubuntu/robomaster-s1-jetson/ros2_install/setup.bash && exec ros2 run s1_chassis_driver robomaster_sensor_power --ros-args -p idle_seconds:=300.0"
+KillSignal=SIGINT
+TimeoutStopSec=45
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

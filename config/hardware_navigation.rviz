@@ -1,0 +1,91 @@
+Panels:
+- Class: rviz_common/Displays
+  Name: Displays
+Visualization Manager:
+  Class: ''
+  Enabled: true
+  Global Options:
+    Fixed Frame: localization_map
+    Background Color: 35; 35; 40
+    Frame Rate: 20
+  Displays:
+  - Class: rviz_default_plugins/Map
+    Name: Saved LiDAR map
+    Enabled: true
+    Topic:
+      Value: /localization/map
+      Reliability Policy: Reliable
+      Durability Policy: Transient Local
+      Depth: 1
+  - Class: rviz_default_plugins/LaserScan
+    Name: Live LiDAR (align with walls)
+    Enabled: true
+    Topic:
+      Value: /scan
+      Reliability Policy: Best Effort
+      Durability Policy: Volatile
+      Depth: 2
+    Color Transformer: FlatColor
+    Color: 0; 220; 255
+    Style: Points
+    Size (Pixels): 3
+    Decay Time: 0
+  - Class: rviz_default_plugins/PoseWithCovariance
+    Name: Estimated laser position
+    Enabled: true
+    Topic:
+      Value: /localization/amcl_pose
+      Reliability Policy: Reliable
+      Durability Policy: Volatile
+      Depth: 1
+  - Class: nav2_rviz_plugins/ParticleCloud
+    Name: Localization particles
+    Enabled: false
+    Topic:
+      Value: /localization/particle_cloud
+      Reliability Policy: Best Effort
+      Durability Policy: Volatile
+      Depth: 1
+  - Class: rviz_default_plugins/TF
+    Name: Frames
+    Enabled: true
+    Show Names: true
+    Show Arrows: true
+    Show Axes: true
+  - Class: rviz_default_plugins/Path
+    Name: Planned route
+    Enabled: true
+    Topic:
+      Value: /hardware_navigation/plan
+      Reliability Policy: Reliable
+      Durability Policy: Volatile
+      Depth: 1
+    Color: 80; 255; 80
+    Line Style: Lines
+    Line Width: 0.03
+  - Class: rviz_default_plugins/Polygon
+    Name: Robot footprint
+    Enabled: true
+    Topic:
+      Value: /hardware_navigation/local_costmap/published_footprint
+      Reliability Policy: Reliable
+      Durability Policy: Volatile
+      Depth: 1
+    Color: 255; 170; 0
+  Tools:
+  - Class: rviz_default_plugins/Interact
+  - Class: rviz_default_plugins/MoveCamera
+  - Class: rviz_default_plugins/Select
+  - Class: rviz_default_plugins/SetGoal
+    Topic: /hardware_navigation/trial_goal
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Target Frame: localization_map
+      Scale: 65
+      X: 2
+      Y: 0
+      Angle: 0
+Window Geometry:
+  Width: 1400
+  Height: 1000

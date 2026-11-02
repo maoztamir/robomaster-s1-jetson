@@ -1,0 +1,30 @@
+joy_node:
+  ros__parameters:
+    dev: /dev/input/js0
+    deadzone: 0.12
+    autorepeat_rate: 20.0
+
+teleop_twist_joy_node:
+  ros__parameters:
+    # Use joy_linux/joy_linux_node renamed to joy_node with this configuration.
+    # ROS Joy mapping checked on the Jetson on 2026-09-10:
+    #   axis 1: left stick vertical (forward is positive, measured +1.0)
+    #   button 6: L1 (measured while held)
+    #   axis 2: right stick horizontal (left is positive, measured +1.0)
+    # Axis 0 selects sideways sliding; ground direction still needs validation.
+    axis_linear:
+      x: 1
+      y: 0
+    scale_linear:
+      x: 1.0
+      y: 1.0
+
+    axis_angular:
+      yaw: 2
+    scale_angular:
+      yaw: 1.0
+
+    # Hold L1 to drive; release it to command zero.
+    require_enable_button: true
+    enable_button: 6  # L1
+    enable_turbo_button: -1

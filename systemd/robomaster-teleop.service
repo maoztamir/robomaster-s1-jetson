@@ -1,0 +1,20 @@
+[Unit]
+Description=RoboMaster L1-enabled gamepad velocity control
+Wants=robomaster-joy.service robomaster-chassis.service network-online.target
+After=robomaster-joy.service robomaster-chassis.service network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/robomaster-s1-jetson
+Environment=ROS_DOMAIN_ID=42
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+Environment=FASTRTPS_DEFAULT_PROFILES_FILE=/home/ubuntu/robomaster-s1-jetson/config/calibration_dds.local.xml
+ExecStart=/bin/bash -c "source /opt/ros/humble/setup.bash && exec ros2 run teleop_twist_joy teleop_node --ros-args --params-file /home/ubuntu/robomaster-s1-jetson/config/ps4_teleop.yaml -r joy:=/robomaster/joy"
+KillSignal=SIGINT
+TimeoutStopSec=10
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

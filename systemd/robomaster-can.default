@@ -1,0 +1,10 @@
+# SocketCAN interface created by the SH-C31A on the Jetson Orin Nano.
+# The Jetson's native MTTCAN controller occupies can0.
+CAN_INTERFACE=can1
+CAN_BITRATE=1000000
+CAN_TXQUEUELEN=1000
+POLL_INTERVAL=1
+# If normal SocketCAN cycling repeatedly fails, rebind only a verified gs_usb
+# interface. The cooldown prevents repeated USB resets during a persistent fault.
+CAN_REBIND_AFTER_FAILURES=3
+CAN_REBIND_COOLDOWN=30

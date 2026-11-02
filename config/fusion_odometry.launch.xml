@@ -1,0 +1,33 @@
+<launch>
+  <arg name="repo"/>
+  <!-- Provisional stock-length origin; offsets from saved user measurements. -->
+  <node pkg="tf2_ros" exec="static_transform_publisher" name="fusion_laser_tf" args="--x 0.005 --y 0 --z 0.25 --frame-id base_link --child-frame-id laser"/>
+  <node pkg="tf2_ros" exec="static_transform_publisher" name="fusion_camera_tf" args="--x 0.09 --y 0.03 --z 0.17 --roll -1.5707963267948966 --pitch 0 --yaw -1.5707963267948966 --frame-id base_link --child-frame-id left_camera_optical_frame"/>
+  <group><push-ros-namespace namespace="fusion/lidar"/>
+    <node pkg="rtabmap_odom" exec="icp_odometry" name="icp_odometry" output="screen">
+      <param name="frame_id" value="base_link"/><param name="odom_frame_id" value="lidar_odom"/>
+      <param name="publish_tf" value="false"/><param name="qos" value="2"/>
+      <param name="Reg/Force3DoF" value="true" type="str"/>
+      <param name="Icp/PointToPlane" value="false" type="str"/>
+      <param name="Icp/CorrespondenceRatio" value="0.3" type="str"/>
+      <remap from="scan" to="/scan"/>
+    </node>
+  </group>
+  <group><push-ros-namespace namespace="fusion/visual"/>
+    <node pkg="rtabmap_odom" exec="stereo_odometry" name="stereo_odometry" output="screen">
+      <param name="frame_id" value="base_link"/><param name="odom_frame_id" value="visual_odom"/>
+      <param name="publish_tf" value="false"/>
+      <param name="approx_sync" value="true"/><param name="approx_sync_max_interval" value="0.03"/>
+      <param name="qos" value="1"/><param name="qos_camera_info" value="2"/>
+      <param name="Reg/Force3DoF" value="true" type="str"/>
+      <remap from="left/image_rect" to="/stereo/left/camera/image_rect"/>
+      <remap from="right/image_rect" to="/stereo/right/camera/image_rect"/>
+      <remap from="left/camera_info" to="/stereo/left/camera/camera_info"/>
+      <remap from="right/camera_info" to="/stereo/right/camera/camera_info"/>
+    </node>
+  </group>
+  <node pkg="robot_localization" exec="ekf_node" name="fusion_ekf" output="screen">
+    <param from="$(var repo)/config/fusion_ekf.yaml"/>
+    <remap from="odometry/filtered" to="/fusion/odom"/>
+  </node>
+</launch>

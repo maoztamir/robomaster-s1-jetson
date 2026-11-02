@@ -1,0 +1,27 @@
+<launch>
+  <!-- Calibrated independent sensors; capture is not hardware synchronized. -->
+  <arg name="calibration_dir" default="/home/ubuntu/robomaster-s1-jetson/output/calibration/refined-20260913"/>
+  <!-- Physical left/right confirmed by user on 2026-09-13. -->
+  <arg name="left_sensor_id" default="1"/>
+  <arg name="right_sensor_id" default="0"/>
+  <node pkg="gscam" exec="gscam_node" name="left_camera" namespace="stereo/left" output="screen" respawn="true" respawn_delay="5">
+    <param name="camera_name" value="imx219_left"/>
+    <param name="camera_info_url" value="file://$(var calibration_dir)/left.yaml"/>
+    <param name="frame_id" value="left_camera_optical_frame"/>
+    <param name="sync_sink" value="false"/>
+    <param name="use_sensor_data_qos" value="true"/>
+    <param name="use_gst_timestamps" value="true"/>
+    <param name="image_encoding" value="jpeg"/>
+    <param name="gscam_config" value="nvarguscamerasrc sensor-id=$(var left_sensor_id) ! video/x-raw(memory:NVMM),width=1280,height=720,format=NV12,framerate=30/1 ! nvvidconv ! video/x-raw,width=640,height=360,format=BGRx ! videorate drop-only=true ! video/x-raw,framerate=10/1 ! videoconvert ! video/x-raw,format=I420 ! jpegenc quality=75"/>
+  </node>
+  <node pkg="gscam" exec="gscam_node" name="right_camera" namespace="stereo/right" output="screen" respawn="true" respawn_delay="5">
+    <param name="camera_name" value="imx219_right"/>
+    <param name="camera_info_url" value="file://$(var calibration_dir)/right.yaml"/>
+    <param name="frame_id" value="right_camera_optical_frame"/>
+    <param name="sync_sink" value="false"/>
+    <param name="use_sensor_data_qos" value="true"/>
+    <param name="use_gst_timestamps" value="true"/>
+    <param name="image_encoding" value="jpeg"/>
+    <param name="gscam_config" value="nvarguscamerasrc sensor-id=$(var right_sensor_id) ! video/x-raw(memory:NVMM),width=1280,height=720,format=NV12,framerate=30/1 ! nvvidconv ! video/x-raw,width=640,height=360,format=BGRx ! videorate drop-only=true ! video/x-raw,framerate=10/1 ! videoconvert ! video/x-raw,format=I420 ! jpegenc quality=75"/>
+  </node>
+</launch>

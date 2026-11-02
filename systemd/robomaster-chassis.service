@@ -1,0 +1,22 @@
+[Unit]
+Description=RoboMaster S1 ROS 2 chassis driver
+Requires=robomaster-can.service
+After=network-online.target robomaster-can.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/robomaster-s1-jetson
+Environment=ROS_DOMAIN_ID=42
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+Environment=FASTRTPS_DEFAULT_PROFILES_FILE=/home/ubuntu/robomaster-s1-jetson/config/calibration_dds.local.xml
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/bin/bash -c "source /opt/ros/humble/setup.bash && source /home/ubuntu/robomaster-s1-jetson/ros2_install/setup.bash && exec ros2 run s1_chassis_driver s1_chassis_node --ros-args --params-file /home/ubuntu/robomaster-s1-jetson/config/s1_chassis.yaml"
+KillSignal=SIGINT
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

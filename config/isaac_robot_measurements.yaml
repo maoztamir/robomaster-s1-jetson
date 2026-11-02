@@ -1,0 +1,441 @@
+# Machine-readable worksheet for the Isaac Sim robot replica.
+# A null value is intentionally unknown and must be physically measured or
+# calibrated. SI units are used throughout: metres, kilograms, seconds, radians.
+
+conventions:
+  linear_unit: m
+  mass_unit: kg
+  angle_unit: rad
+  body_axes:
+    x: forward
+    y: left
+    z: up
+
+chassis:
+  wheel_to_wheel_measurement:
+    recorded_on: "2026-09-13"
+    source: user_reported
+    distance: 0.240
+    axis: left_to_right
+    endpoints: wheel_outer_edges
+    note: >-
+      User confirmed the outside width across the left and right wheels.
+      This is not wheel-centre track width or front-to-rear chassis length.
+  stock_complete_size_xyz: [0.320, 0.240, 0.270]
+  stock_complete_mass: 3.3
+  reference_chassis_base:
+    source: jeguzzi/robomaster_ros@c05a39d7f0fa8b3b277aa74826aa92e202efc987
+    base_link_pose:
+      xyz: [0.0, 0.0, 0.03465]
+      rpy: [0.0, 0.0, 0.0]
+    mass: 1.934
+    center_of_mass_xyz: [-0.0058789, -0.0001128, 0.0294307]
+    inertia:
+      ixx: 0.01451
+      ixy: 0.0
+      ixz: 0.0
+      iyy: 0.00512
+      iyz: 0.0
+      izz: 0.01759
+  overall_size_xyz: [null, null, null]
+  ground_clearance: null
+  main_collision_size_xyz: [null, null, null]
+  running_mass: null
+  center_of_mass_xyz: [null, null, null]
+  inertia:
+    ixx: null
+    ixy: null
+    ixz: null
+    iyy: null
+    iyz: null
+    izz: null
+
+drive:
+  type: mecanum
+  gamepad_validation:
+    checked_on: "2026-09-10"
+    status: lifted_wheel_gamepad_test_user_reported_working
+    controller: PS4 DualShock 4 over Bluetooth on Jetson
+    ros_input_node: joy_linux/joy_linux_node
+    forward_axis: 1
+    forward_axis_sign: positive
+    enable_button: 6
+    enable_button_label: L1
+    require_enable_button: true
+    teleop_linear_x_scale: 1.0
+    chassis_linear_scale: 30.0
+    max_wheel_command: 30
+    lateral_and_yaw_enabled: true
+    reboot_test:
+      checked_on: "2026-09-10"
+      reboot_verified_by_changed_boot_id: true
+      services_enabled_and_active:
+        - robomaster-can.service
+        - robomaster-chassis.service
+        - robomaster-joy.service
+        - robomaster-teleop.service
+      user_observation: User reported "seems to be ok" after the reboot test.
+    turning_test:
+      status: lifted_wheel_left_and_right_turn_test_user_reported_working
+      yaw_axis: 2
+      left_turn_axis_sign: positive
+      teleop_yaw_scale: 1.0
+      chassis_angular_scale: 30.0
+      max_wheel_command: 30
+      user_observation: >-
+        User reported "works" after being instructed to test right-stick left
+        and right with L1 held, releasing L1 to stop each time.
+    combined_axes_test:
+      status: enabled_for_lifted_wheel_test_result_pending
+      teleop_scales_xyz: [1.0, 1.0, 1.0]  # linear.x, linear.y, angular.z
+      lateral_axis: 0
+      lateral_direction_physically_verified: false
+      max_wheel_command: 30
+    user_observation: >-
+      User reported "works" after being instructed to hold L1, push forward
+      for one second with all wheels lifted, and release L1 to stop.
+    note: >-
+      These are command scaling values, not calibrated physical velocities.
+      Ground travel and post-calibration disconnect behavior remain unvalidated.
+  wheel_command_validation:
+    checked_on: "2026-09-08"
+    status: forward_command_motion_and_stop_confirmed
+    test_command: 30
+    test_duration_s: 1.0
+    user_observation: >-
+      After successful DJI calibration and battery charging, the user confirmed
+      all four lifted wheels turned for approximately one second and stopped
+      during a repeated Python forward-command test at raw command 30.
+      This confirms wheel motion and stopping, not calibrated speed or ground travel.
+    warmup_s: 1.0
+    cooldown_s: 1.0
+    historical_issue: >-
+      August tests had inconsistent motion and lacked warm-up. September long
+      keepalive tests exposed stationary attitude drift and rollover mode resets;
+      after DJI calibration, both C++ and Python passed four-minute zero tests.
+    remaining_checks:
+      - Remaining wheel direction patterns.
+      - Post-calibration watchdog and disconnect behavior.
+    retry_requirements:
+      - Keep all four wheels lifted.
+      - Retain a one-second heartbeat and zero-wheel-command warm-up.
+      - Keep one driver process alive between direction tests.
+      - Stop testing if the controller remains in slow-red Stop Mode.
+  # Axle-centre values below come from jeguzzi/robomaster_ros commit
+  # c05a39d7f0fa8b3b277aa74826aa92e202efc987, not DJI's public spec sheet.
+  wheelbase: 0.200
+  track_width: 0.200
+  nominal_wheel_diameter: 0.100
+  effective_wheel_radius: null
+  wheel_width: 0.042
+  nominal_wheel_mass: 0.157
+  roller_angle: null
+  stock_max_motor_speed_rpm: 1000.0
+  stock_max_motor_angular_velocity: 104.71975511965977
+  calibrated_max_wheel_angular_velocity: null
+  max_wheel_torque: null
+  wheels:
+    front_right:
+      driver_order: w1
+      position_xyz: [0.100, -0.100, 0.050]
+      joint_axis_xyz: [0.0, 1.0, 0.0]
+      roller_handedness: null
+    front_left:
+      driver_order: w2
+      position_xyz: [0.100, 0.100, 0.050]
+      joint_axis_xyz: [0.0, 1.0, 0.0]
+      roller_handedness: null
+    rear_left:
+      driver_order: w3
+      position_xyz: [-0.100, 0.100, 0.050]
+      joint_axis_xyz: [0.0, 1.0, 0.0]
+      roller_handedness: null
+    rear_right:
+      driver_order: w4
+      position_xyz: [-0.100, -0.100, 0.050]
+      joint_axis_xyz: [0.0, 1.0, 0.0]
+      roller_handedness: null
+
+sensors:
+  provisional_simulation_mounts:
+    recorded_on: "2026-09-13"
+    status: user_accepted_stock_length_assumption
+    reference: ground_plane_at_midpoint_of_stock_overall_length_and_width
+    assumed_front_edge_x: 0.160
+    lidar_scan_centre_xyz: [0.005, 0.0, 0.250]
+    camera_midpoint_xyz: [0.090, 0.0, 0.170]
+    left_lens_xyz: [0.090, 0.030, 0.170]
+    right_lens_xyz: [0.090, -0.030, 0.170]
+    note: >-
+      Derived from user-measured offsets using stock length 320 mm and assuming
+      the same front edge. This ground-plane reference is not a confirmed
+      hardware base_link origin. A moved-box test confirmed scan angle zero
+      points forward; left/right scan handedness remains unverified.
+  lidar:
+    model: RPLIDAR A1
+    serial_number: null  # Device-specific identifier omitted from public source.
+    firmware_version: "1.29"
+    hardware_revision: 7
+    frame_id: laser
+    ros_topic: /scan
+    ros_message_type: sensor_msgs/msg/LaserScan
+    transport:
+      usb_bridge: CP2102
+      baud: 115200
+      stable_device_path: >-
+        /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0
+    observed_scan_mode: Sensitivity
+    sample_rate_hz_observed: 8000
+    driver_reported_scan_rate_hz: 10.0
+    update_rate_hz_observed: 7.32
+    horizontal_fov: 6.283185307179586
+    min_range: 0.15
+    max_range: 12.0
+    mounting_measurement:
+      recorded_on: "2026-09-13"
+      source: user_reported
+      height_above_floor: 0.250
+      distance_behind_front_edge: 0.155
+      lateral_offset_from_chassis_centerline: 0.0
+      measurement_point: scan_centre
+      mounting_roll_pitch: [0.0, 0.0]
+      cable_direction: forward
+      scan_frame_yaw: 0.0
+      scan_orientation_validation:
+        checked_on: "2026-09-15"
+        source: user_supervised_moved_box_test
+        status: forward_zero_confirmed_left_right_handedness_unverified
+        test_geometry: box_placed_on_robot_forward_centerline
+        initial_central_range_m: 1.18
+        moved_box_closer_by_m: 0.30
+        final_central_range_m:
+          minimum: 0.884
+          mean: 0.889
+          maximum: 0.900
+          valid_samples_within_10_deg: 61
+        note: >-
+          The approximately 0.29 m decrease after moving the box about 0.30 m
+          closer confirms that scan angle zero points forward. This test did
+          not establish whether positive scan angles point left or right.
+      note: >-
+        User reported 250 mm above the floor, 155 mm behind the front edge,
+        centred left-to-right. Conversion to base_link requires the front-edge
+        and floor offsets relative to that frame. User confirmed measurements
+        refer to the scan centre, mounting is level and cables face forward.
+        The moved-box test independently confirmed forward scan zero.
+    base_link_pose:
+      xyz: [null, null, null]
+      rpy: [null, null, null]
+    range_noise_stddev: null
+    observation_source: >-
+      Identity came from a Jetson ROS 2 rplidar_node log captured 2026-08-26.
+      The current topic rate was measured live on 2026-08-28; an earlier
+      validation measured 6.98 Hz.
+
+  stereo_camera:
+    recovered_calibration_candidate:
+      reviewed_on: "2026-09-13"
+      status: installed_for_live_rectification_testing
+      installed_on: "2026-09-14"
+      installed_host: "192.0.2.10"
+      resolution: [640, 360]
+      left_yaml: output/calibration/refined-20260913/left.yaml
+      right_yaml: output/calibration/refined-20260913/right.yaml
+      review: output/calibration/refined-20260913/README.md
+      estimated_baseline: 0.06033392911172579
+      retained_training_pairs: 53
+      reserved_validation_pairs: 27
+      training_vertical_rms_px: 0.3142
+      reserved_vertical_rms_px: 1.7931
+      note: >-
+        Recovered from existing captures with corrected ordering and outlier
+        filtering. Mixed-session residuals remain. No new capture, no forced
+        baseline, no validated motion synchronization or stereo SLAM accuracy.
+    model: IMX219-83  # Confirm the exact label on the installed board.
+    left_frame_id: left_camera_optical_frame
+    right_frame_id: right_camera_optical_frame
+    left_ros_topic: /stereo/left/camera/image_raw
+    right_ros_topic: null
+    native_resolution: [3280, 2464]
+    validated_stream_resolution: [1280, 720]
+    validated_left_rate_hz: 14.33
+    nominal_baseline: 0.060
+    mounting_measurement:
+      recorded_on: "2026-09-13"
+      source: user_reported
+      measurement_point: lens_centres
+      lens_height_above_floor: 0.170
+      lens_distance_behind_front_edge: 0.070
+      lens_centre_separation: 0.060
+      midpoint_lateral_offset_from_chassis_centerline: 0.0
+      left_lens_lateral_offset_from_chassis_centerline: 0.030
+      right_lens_lateral_offset_from_chassis_centerline: -0.030
+      camera_assembly_rpy: [0.0, 0.0, 0.0]  # ROS body axes, not optical-frame axes.
+      orientation_source: user_confirmed_straight_forward_and_level
+      note: >-
+        User reported lenses 170 mm above the floor, 70 mm from the front
+        (interpreted as behind the front edge), 60 mm apart, with the pair
+        centred left-to-right. Left/right follow ROS body axes (+Y left).
+        Conversion to base_link requires the front-edge and floor offsets
+        relative to that frame. User confirmed straight forward and level. Physical
+        lens spacing does not replace calibrated stereo extrinsics.
+    hardware_frame_sync: false
+    jetson_camera_inventory:
+      - device: /dev/video0
+        sensor: imx219
+        i2c_device: 9-0010
+        native_pixel_format: RG10
+        native_mode: [3280, 2464, 21.0]
+      - device: /dev/video1
+        sensor: imx219
+        i2c_device: 10-0010
+        native_pixel_format: RG10
+        native_mode: [3280, 2464, 21.0]
+    device_to_left_right_assignment:
+      confirmed_on: "2026-09-13"
+      source: user_confirmed_previous_streams_reversed
+      left_argus_sensor_id: 1
+      right_argus_sensor_id: 0
+      convention: robot_left_and_right_when_looking_forward_from_behind
+      note: Argus sensor IDs; V4L2 device numbering is not established by this check.
+    argus_validation:
+      checked_on: "2026-08-28"
+      sensor_ids_tested: [0, 1]
+      capture_test_passed: true
+      test_mode: [1280, 720, 30.0]
+      frames_per_sensor: 90
+      advertised_modes:
+        - [3280, 2464, 21.0]
+        - [3280, 1848, 28.0]
+        - [1920, 1080, 30.0]
+        - [1640, 1232, 30.0]
+        - [1280, 720, 60.0]
+    base_link_pose:
+      xyz: [null, null, null]
+      rpy: [null, null, null]
+    left_intrinsics: null
+    left_distortion: null
+    right_intrinsics: null
+    right_distortion: null
+    calibrated_left_to_right_pose: null
+
+  camera_imu:
+    model: ICM-20948
+    validated: false
+    jetson_kernel_bound_device_detected: false
+    detection_note: >-
+      No ICM-20948 appeared among kernel-bound I2C devices on 2026-08-27.
+      Confirm the four-wire connection and header bus before probing 0x68/0x69.
+    frame_id: stereo_imu_link
+    imu_ros_topic: null
+    magnetic_field_ros_topic: null
+    update_rate_hz: null
+    base_link_pose:
+      xyz: [null, null, null]
+      rpy: [null, null, null]
+    accelerometer_noise: null
+    gyroscope_noise: null
+    magnetometer_noise: null
+
+hardware_not_simulated_as_sensor:
+  computer: NVIDIA Jetson Orin Nano Developer Kit
+  jetson_software_release: Jetson Linux R36.4.7
+  storage:
+    model: KINGSTON SNV2S500G
+    nominal_capacity_gb: 500
+    observed_capacity_gib: 465.8
+    device: /dev/nvme0n1
+    partition: /dev/nvme0n1p1
+    filesystem: ext4
+    mountpoint: /data
+  can_adapter: DSD TECH SH-C31A
+  can_interface: can1
+  can_bitrate: 1000000
+  can_live_validation:
+    checked_on: "2026-08-28"
+    validated_after_jetson_reboot: true
+    controller_connected: true
+    interface_state: ERROR-ACTIVE
+    rx_packets_at_check: 87353
+    tx_packets_at_check: 92241
+    bus_errors: 0
+    error_warning_events: 0
+    error_passive_events: 0
+    bus_off_events: 0
+    active_services:
+      - robomaster-can.service
+      - robomaster-chassis.service
+    observed_controller_can_ids: [0x202, 0x211, 0x213, 0x214]
+
+jetson_live_validation:
+  checked_on: "2026-08-28"
+  ssh_reachable: true
+  ros_domain_id: 42
+  observed_topics:
+    /cmd_vel: geometry_msgs/msg/Twist
+  expected_sensor_topics_not_advertised:
+    - /scan
+    - /stereo/left/camera/image_raw
+  note: Sensor publishers were not running during this inventory.
+
+controller_calibration_validation:
+  procedure_document: docs/chassis-calibration.md
+  checked_on: "2026-09-08"
+  procedure: User completed DJI app calibration with original assembly reinstalled.
+  stationary_attitude_check:
+    duration_s: 31.8
+    samples: 319
+    # Diagnostic angles below are explicitly degrees, unlike the model's radians.
+    pitch_start_end_deg: [0.06, 0.06]
+    roll_start_end_deg: [-2.26, -2.36]
+    yaw_start_end_deg: [-0.15, -0.11]
+    note: Earlier stationary roll drift was approximately 25.5 degrees in 32 seconds.
+  cpp_zero_command_keepalive:
+    duration_s: 240.0086
+    heartbeat_count: 23725
+    max_heartbeat_gap_s: 0.010564
+    packet_crc_errors: 0
+    nonzero_wheel_packets: 0
+    user_observation: Indicator stayed green until the script stopped.
+    rollover_messages: 0
+    observed_warnings:
+      - lost connect with gimbal
+      - low power warning
+    jetson_recording: null  # Private validation recording is not distributed.
+  python_zero_command_keepalive:
+    checked_on: "2026-09-08"
+    battery: User reported charged battery before test; no low-power warnings observed.
+    duration_s: 240.0427
+    heartbeat_count: 22404
+    max_heartbeat_gap_s: 0.011658
+    packet_crc_errors: 0
+    nonzero_wheel_packets: 0
+    rollover_messages: 0
+    low_power_messages: 0
+    mode_reset_during_test: false
+    observed_warnings:
+      - lost connect with gimbal
+    shutdown: Lost-RC and mode-reset diagnostics occurred only after heartbeat stopped.
+    jetson_recording: null  # Private validation recording is not distributed.
+  python_ten_minute_keepalive:
+    checked_on: "2026-09-08"
+    status: passed
+    user_observation: User reported the ten-minute test passed.
+    duration_s: 600.0397
+    heartbeat_count: 55961
+    max_heartbeat_gap_s: 0.015131
+    controller_0x202_packets_during_test: 30609
+    max_controller_packet_gap_s: 0.022149
+    packet_crc_errors: 0
+    nonzero_wheel_packets: 0
+    rollover_messages_during_test: 0
+    low_power_messages_during_test: 0
+    mode_reset_during_test: false
+    bus_errors: 0
+    transmit_backlog_packets: 0
+    observed_warnings:
+      - lost connect with gimbal
+    shutdown: Lost-RC and manual-mode transition occurred only after heartbeat stopped.
+    jetson_recording: null  # Private validation recording is not distributed.
+  remaining_validation:
+    - Validate remaining directions and fault handling; forward-command wheel motion and stop are user-confirmed.

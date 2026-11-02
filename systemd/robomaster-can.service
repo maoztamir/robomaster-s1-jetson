@@ -1,0 +1,14 @@
+[Unit]
+Description=RoboMaster S1 SocketCAN connection monitor
+After=systemd-modules-load.service
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/default/robomaster-can
+ExecStartPre=/sbin/modprobe gs_usb
+ExecStart=/usr/local/sbin/robomaster-can-watch
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

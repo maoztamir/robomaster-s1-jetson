@@ -1,0 +1,28 @@
+# Raw CAN telemetry validation; not a complete sensor_msgs/Imu calibration.
+checked_on: '2026-09-15'
+stationary:
+  samples: 149
+  nominal_rate_hz: 10
+  raw_acceleration_mean: [0.027763, 0.000567, -1.001835]
+  raw_gyro_mean: [-0.000772, -0.000194, -0.000277]
+  raw_gyro_std: [0.001385, 0.001356, 0.001612]
+yaw_test:
+  user_motion: approximately_90_degrees_left_flat_on_floor
+  samples: 149
+  max_receipt_gap_s: 0.10111
+  raw_integral_xyz: [0.01693, 0.01849, -1.46702]
+  inferred_gyro_unit: rad_per_s
+  ros_yaw_rate_from_raw_z_scale: -1.0
+  integrated_left_angle_deg: 84.05
+  status: approximate_sign_and_unit_check_passed
+  note: Do not fit an exact scale factor to an approximate hand rotation.
+acceleration:
+  inferred_raw_unit: gravity_multiple
+  full_axis_transform_verified: false
+  gravity_removal_verified: false
+  enabled_for_fusion: false
+orientation:
+  available_from_this_raw_stream: false
+sources:
+  - output/imu/fusion-imu-20260915-203630.log
+  - output/imu/fusion-imu-yaw-20260915-205307.log

@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(calibration_decoder)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(image_transport REQUIRED)
+add_executable(calibration_decoder decoder.cpp)
+ament_target_dependencies(calibration_decoder rclcpp image_transport)

@@ -1,0 +1,32 @@
+rtabmap:
+  ros__parameters:
+    use_sim_time: true
+    frame_id: base_link
+    map_frame_id: map
+    odom_frame_id: odom
+    publish_tf: true
+    subscribe_depth: false
+    subscribe_rgb: false
+    subscribe_stereo: false
+    subscribe_rgbd: true
+    RGBD/CreateOccupancyGrid: "true"
+    subscribe_scan: true
+    approx_sync: true
+    approx_sync_max_interval: 0.04
+    topic_queue_size: 20
+    sync_queue_size: 20
+    qos_image: 2
+    qos_camera_info: 2
+    qos_scan: 2
+    wait_for_transform: 0.3
+    # Use stereo features for place recognition and the horizontal scan for
+    # occupancy. Odometry is supplied by the ideal simulator, not stereo VO.
+    Rtabmap/DetectionRate: "2.0"
+    RGBD/LinearUpdate: "0.10"
+    RGBD/AngularUpdate: "0.10"
+    Reg/Force3DoF: "true"
+    Grid/Sensor: "0"
+    Grid/CellSize: "0.05"
+    Grid/RangeMax: "12.0"
+    Mem/IncrementalMemory: "true"
+    Mem/STMSize: "30"
