@@ -1,5 +1,7 @@
 # RoboMaster S1 Jetson
 
+![RoboMaster S1 with Jetson Orin Nano, RPLIDAR A1 and stereo camera](docs/images/robot-overview.jpg)
+
 This project turns a DJI RoboMaster S1 into a ROS 2 mobile robot controlled by a
 Jetson Orin Nano over direct CAN. It includes gamepad driving, LiDAR obstacle
 avoidance, calibrated stereo camera streaming, RTAB-Map mapping experiments,
@@ -53,6 +55,15 @@ orientation, wheel odometry and battery feedback are not validated ROS inputs.
 | [IMX219-83 stereo camera](https://www.waveshare.com/IMX219-83-Stereo-Camera.htm), 60 mm measured baseline | Dual IMX219 images for visual odometry and mapping; see board-identification note below |
 | Dell laptop, ROS 2 Jazzy | Stereo rectification, RTAB-Map and map inspection |
 | Separate Isaac Sim host, ROS 2 Jazzy | Simulated robot, patrol and Nav2 experiments |
+
+| Front-left | Front | Right side |
+|---|---|---|
+| [![Front-left view](docs/images/robot-front-left.jpg)](docs/images/robot-front-left.jpg) | [![Front view](docs/images/robot-front.jpg)](docs/images/robot-front.jpg) | [![Right-side view](docs/images/robot-side-right.jpg)](docs/images/robot-side-right.jpg) |
+
+From top to bottom: the RPLIDAR A1 on standoffs, the Jetson Orin Nano with two
+Wi-Fi antennas on 3D-printed plates, the IMX219-83 stereo camera facing forward,
+and the SH-C31A USB-CAN adapter wired to the S1 chassis CAN bus. The original
+gimbal and blaster are removed.
 
 Links point to manufacturer product or support pages. Our camera records identify
 an IMX219-83 / Waveshare-style stereo board, but still mark the exact board label
