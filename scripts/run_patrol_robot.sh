@@ -27,6 +27,7 @@ fi
 : "${PATROL_TURN_COMMAND:=0.5}"
 : "${PATROL_RADIUS:=0.4}"
 : "${PATROL_CLEARANCE:=0.75}"
+: "${PATROL_DURATION:=120.0}"  # patrol_node rejects more than 600 s
 systemctl is-active --quiet robomaster-chassis
 systemctl is-active --quiet robomaster-lidar
 sudo -v
@@ -47,7 +48,7 @@ trap 'exit 130' INT
 trap 'exit 143' TERM HUP
 sudo -n systemctl stop robomaster-teleop
 /usr/bin/python3 "$repo_dir/s1_can/patrol_node.py" --ros-args \
-    -p enabled:=true -p duration:=120.0 -p require_tracking:="$require_tracking" \
+    -p enabled:=true -p duration:="$(printf %.1f "$PATROL_DURATION")" -p require_tracking:="$require_tracking" \
     -p lidar_yaw:="$PATROL_LIDAR_YAW" -p forward:="$PATROL_FORWARD_COMMAND" \
     -p turn:="$PATROL_TURN_COMMAND" -p radius:="$PATROL_RADIUS" \
     -p clearance:="$PATROL_CLEARANCE" &

@@ -49,7 +49,7 @@ The controller modules and `scripts/run_patrol_robot.sh` are installed in
 Run `bash scripts/run_patrol_robot.sh --check` for a 15-second scan-processing
 check. It publishes only to `/patrol/check_cmd_vel`, leaving driving services alone.
 
-The manual `--drive` mode is a two-minute supervised trial. Defaults are
+The manual `--drive` mode is a two-minute supervised trial (`PATROL_DURATION`, at most 600 s). Defaults are
 scanner yaw 0, forward command 0.5, turn command 0.5, turning clearance 0.4 m,
 and forward threshold 0.75 m. Short supervised pulses produced approximately
 10 cm forward and 20 degrees left respectively. These are initial trial settings,

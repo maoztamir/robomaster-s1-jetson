@@ -12,7 +12,7 @@ from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, QoSProfile, qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Bool
-from std_srvs.srv import SetBool, Trigger
+from std_srvs.srv import Empty, SetBool, Trigger
 from tf2_ros import Buffer, TransformListener, TransformException
 
 from .sensor_idle import SensorIdlePolicy
@@ -43,6 +43,11 @@ class SensorPowerNode(Node):
         self.executor_pool = ThreadPoolExecutor(max_workers=1)
         self.tf = Buffer()
         self.listener = TransformListener(self.tf, self)
+        # Spin-down/spin-up scans gave LiDAR odometry a false velocity that its motion
+        # guess multiplied by the sleep gap, so it never re-registered after wake.
+        self.pause_odom = self.create_client(Empty, '/localization/icp_odometry/pause_odom')
+        self.resume_odom = self.create_client(Empty, '/localization/icp_odometry/resume_odom')
+        self.odom_paused = False
         self.ready = self.create_publisher(Bool, '/robomaster/sensors/ready', 10)
         self.create_subscription(Twist, '/cmd_vel', self.command, 10)
         self.create_subscription(PoseWithCovarianceStamped, '/localization/initialpose',
@@ -175,6 +180,9 @@ class SensorPowerNode(Node):
                 action = 'wake'
             elif not self.asleep and self.policy.should_sleep(now):
                 action = 'sleep'
+            if action == 'sleep' and self.pause_odom.service_is_ready():
+                self.pause_odom.call_async(Empty.Request())
+                self.odom_paused = True
             if action:
                 self.action = action
                 self.scan_at = None
@@ -183,6 +191,10 @@ class SensorPowerNode(Node):
                 self.future = self.executor_pool.submit(self.switch, action)
         permitted = (not self.asleep and self.future is None and self.scan_at is not None
                      and now - self.scan_at <= .7 and self.scan_count >= 2)
+        # About 1.5 s of fresh scans skips the spin-up before odometry sees them again.
+        if permitted and self.odom_paused and self.scan_count >= 10:
+            self.resume_odom.call_async(Empty.Request())
+            self.odom_paused = False
         if permitted and self.policy.active_goals:
             try:
                 tf = self.tf.lookup_transform('localization_map', 'laser', rclpy.time.Time())
